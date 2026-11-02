@@ -1,0 +1,23 @@
+{
+  "_about": "Dimension-level evaluations of collected responses. The Export JSON button on evaluations.html produces one record in this format; paste it into `evaluations`, then run `python build.py`.",
+  "_template": {
+    "response_id": "R-001",
+    "evaluator": "",
+    "date": "YYYY-MM-DD",
+    "blind_to_model": false,
+    "scores": {
+      "I": { "score": null, "rationale": "" },
+      "II": { "score": null, "rationale": "" },
+      "III": { "score": null, "rationale": "" },
+      "IV": { "score": null, "rationale": "" },
+      "V": { "score": null, "rationale": "" }
+    },
+    "total_secondary": null,
+    "governing_thesis": "",
+    "consequential_insight": "",
+    "disconfirming_evidence": "",
+    "unexpected_interpretation": "",
+    "assessor_uncertainty": ""
+  },
+  "evaluations": []
+}

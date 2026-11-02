@@ -1,45 +1,63 @@
-# Nordland — Beyond Explanation
+# Beyond Explanation — the Nordland study
 
-A GitHub Pages-ready, mobile-friendly research website by Elaine Chou. The site is prebuilt using static HTML, CSS, and vanilla JavaScript. **No build server, paid hosting, API key, or JavaScript framework is required.**
+A static research website by Elaine Chou, published with GitHub Pages. Nordland is a fictional welfare state whose universal benefit system sharply reduces poverty, yet minority-background residents face higher initial benefit denials and report a weaker sense of belonging. The study asks how that paradox should be understood and, inseparably, how well AI models can work it out for themselves.
 
-## Pages
+No server, framework, API key or tracking is involved. The HTML is prebuilt and committed.
 
-- `index.html`: welfare-state paradox, conceptual depth, research method, limitations, and scholarly foundations.
-- `evaluation.html`: interactive five-dimension 0–4 scoring rubric, evaluator-only interpretive notes, three constructed essays with explained scores, and validity audit.
-- `case.html`: **standalone neutral case record and broad essay assignment only**. Supply this page or `data/Nordland_Case_Record.md` directly to a model, without sending the evaluator page.
+## Site structure
 
-## Publish with GitHub Pages
+| Page | Section | Audience |
+|---|---|---|
+| `index.html` | Home: research questions, the paradox in the record, six-section index, study status | Public |
+| `case-record.html` | 01 Case Record: the neutral record and essay prompt only | **Model-facing** |
+| `methodology.html` | 02 Methodology: research questions, conceptual reasoning evaluation, study design, validity questions | Public |
+| `rubric.html` | 03 Evaluation Rubric: five dimensions, 0–4 anchors, guardrails, protocol, reference analysis, calibration essays | **Evaluator-only** |
+| `responses.html` | 04 Model Responses: unedited outputs with provenance | Public |
+| `evaluations.html` | 05 Evaluations: score profiles, rationales, scoring instrument | Evaluator |
+| `findings.html` | 06 Findings: comparative patterns, limitations, implications | Public |
 
-1. Open GitHub and create a new repository (for example `nordland-research`). Set the repository **Public** if the website should be publicly viewable.
-2. Open the repository's **Add file → Upload files**. Upload **the contents of this folder**, not the ZIP itself. `index.html` must sit at the root alongside `case.html`, `evaluation.html`, and the `assets` and `data` directories.
-3. Commit the uploaded files.
-4. Open **Settings → Pages → Build and deployment**. Choose **Deploy from a branch**; select the `main` branch and `/ (root)` folder; save.
-5. Visit the public address GitHub displays in the Pages settings. Check all three pages, mobile layout, copy-record function, and JSON/CSV exports.
+`case.html` and `evaluation.html` redirect to their new locations so older links keep working.
 
-The site uses relative links and will also work when hosted under a repository subdirectory. HTML can be opened directly from a computer for inspection; secure-context browser restrictions may prevent clipboard copying when opened as a local `file://` page. The download links still work.
+## Repository layout
 
-## Updating without changing document names
+```
+data/                     research content (edit these)
+  Nordland_Case_Record.md
+  Nordland_Methodology.md
+  Nordland_Validity_Questions.md
+  Nordland_Evaluator_Interpretations_and_Assessment_Criteria.md
+  responses.json          model outputs + provenance (empty until collection)
+  evaluations.json        dimension-level scores (empty until scoring)
+  Nordland_Findings.md    optional; create when findings are written
+assets/css/site.css       shared design system
+assets/js/site.js         copy/print, contents highlighting, chart tooltips, scoring form
+build.py                  generates every HTML page from data/
+verify_case.py            arithmetic check of the Table A1 office figures
+```
 
-Edit the content in the stable filenames inside `data/`. To check the weighted office-table figures, run `python verify_case.py`. Then rebuild from the repository root:
+## Updating content
 
 ```bash
 python -m pip install -r requirements.txt
+python verify_case.py
 python build.py
 ```
 
-Upload or commit the updated `data` files and generated `index.html`, `evaluation.html`, and `case.html`. No cross-document draft labels or numbered filenames need updating. Git itself retains the change history.
+Commit the changed `data/` files together with the regenerated HTML.
 
-The content source files are:
+- **Adding a model response:** append an object to `responses` in `data/responses.json` using the field names in `_template`. Paste the model's output, unedited, into `output_markdown`.
+- **Adding an evaluation:** score the response with the instrument on `evaluations.html` and choose **Export JSON**. Paste the exported record into `evaluations` in `data/evaluations.json`.
+- **Writing findings:** create `data/Nordland_Findings.md`. Until that file exists, the Findings page shows a labelled placeholder.
 
-- `data/Nordland_Case_Record.md`
-- `data/Nordland_Methodology.md`
-- `data/Nordland_Evaluator_Interpretations_and_Assessment_Criteria.md`
-- `data/Nordland_Validity_Questions.md`
+The build checks that every line of the case record appears in the rendered page, and that the homepage figure's numbers still match the case record text. If either check fails, the build stops.
 
-Styling is in `assets/styles.css` and browser interactions are in `assets/app.js`. The design requests Noto Serif via Google Fonts with a local serif fallback; no font files are bundled.
+## Publishing with GitHub Pages
+
+Go to **Settings → Pages → Deploy from a branch**, then choose `main` / `(root)`. All links are relative, so the site works under a project path such as `https://<user>.github.io/nordland/`. A `.nojekyll` file disables Jekyll processing.
 
 ## Research and publication boundaries
 
-The fictional record and broad prompt are separate from assessor notes. The public evaluator page is **not password protected**; do not provide it as context in a clean first-run model test. The three scored illustrations (4/20, 15/20, 20/20) are constructed calibration examples, not results of model testing. The website is a methodological demonstration, not evidence of validated general model capability.
-
-Rubric scoring runs locally in the browser. The form does not contact a server and does not automatically save entries. Export JSON (full evaluator notes) or CSV (dimension scores) before closing the page. No automatic data collection or user tracking is included.
+- Supply only `case-record.html` (or `data/Nordland_Case_Record.md`) to a model. The evaluator pages are public for transparency but not access-controlled.
+- The three scored essays on the Rubric page are **constructed calibration examples**, not model outputs or experimental results.
+- No model responses, evaluations or findings have been published yet. Those pages show clearly marked placeholders until real data is added.
+- The scoring form runs entirely in the browser and saves nothing automatically.
