@@ -36,7 +36,7 @@ The content source files are:
 - `data/Nordland_Evaluator_Interpretations_and_Assessment_Criteria.md`
 - `data/Nordland_Validity_Questions.md`
 
-Styling is in `assets/styles.css` and browser interactions are in `assets/app.js`. The design requests Noto Serif via Google Fonts with a local serif fallback; no font files are bundled.
+Styling is in `assets/styles.css` and browser interactions are in `assets/app.js`. The design requests Noto Serif (research headings, essays, case record) and Noto Sans (interface) via Google Fonts with local fallbacks; no font files are bundled. `build.py` only arranges text from `data/` into pages: rubric anchors, score-separation questions, and the three calibration responses (essays, scores, rationales) are parsed from the evaluator source, and the build fails if the parsed scores disagree with its A.4 comparison table.
 
 ## Research and publication boundaries
 
