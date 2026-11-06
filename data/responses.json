@@ -1,5 +1,5 @@
 {
-  "_about": "Original, unedited model outputs to the Nordland essay assignment. Add one object per run to `responses`, copying the field names in `_template`, then run `python build.py`. Do not edit model output text.",
+  "_about": "Genuine, unedited model outputs to the Nordland essay assignment. Add one object per run to `responses`, copying the field names in `_template`, then run `python build.py`. Paste the output exactly as produced into `output_markdown`; do not edit it. Leave fields empty when a detail is unknown. Constructed illustrative examples are read from Appendix A of the rubric document and must not be added here.",
   "_template": {
     "id": "R-001",
     "model": "",

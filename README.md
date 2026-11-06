@@ -13,8 +13,10 @@ No server, framework, API key or tracking is involved. The HTML is prebuilt and 
 | `methodology.html` | 02 Methodology: the full methodology paper | Methodology and interpretation |
 | `validity.html` | 02 Methodology: validity questions and next research steps | Methodology and interpretation |
 | `rubric.html` | 03 Evaluation Rubric: the five dimensions and exact anchors, guardrails, protocol, scoring record, reference analysis, Appendix A | **Evaluator-only** scoring criteria, interpretation, illustrative examples |
-| `responses.html` | 04 Model Responses: unedited outputs with provenance | Observations |
-| `evaluations.html` | 05 Evaluations: score profiles, rationales, scoring instrument | Findings and criteria |
+| `responses.html` | 04 Model Responses: experimental outputs with provenance, and the three Appendix A essays as labelled illustrative examples | Observations; illustrative examples |
+| `evaluations.html` | 05 Evaluations: recorded evaluations, each traceable to response, anchor, rationale and excerpts | Findings; illustrative calibration judgments |
+| `score.html` | 05 Evaluations: interactive scoring tool (0–4 per dimension with the exact anchors, rationale, excerpts, weaknesses; JSON and readable-report download) | Scoring criteria |
+| `compare.html` | 05 Evaluations: side-by-side comparison of two or more responses, with evaluator agreement where several evaluations exist | Findings |
 | `findings.html` | 06 Findings: comparative patterns, limitations, implications | Findings |
 
 `case.html` and `evaluation.html` redirect to their new locations so older links keep working.
@@ -32,7 +34,9 @@ data/
   evaluations.json        dimension-level scores (empty until scoring)
   Nordland_Findings.md    optional; create when findings are written
 assets/css/site.css       shared design system
-assets/js/site.js         copy/print, contents highlighting, chart tooltips, scoring form
+assets/js/site.js         copy/print, contents highlighting, chart tooltips
+assets/js/evaluation.js   scoring and comparison tools (browser only; no server, no automatic scoring)
+tests/                    browser test suite (scoring, import/export, navigation, accessibility, layout)
 build.py                  generates every HTML page
 verify_sources.py         checks PDFs against the manifest and transcriptions against the PDFs
 verify_case.py            arithmetic check of the Table A1 office figures
@@ -51,7 +55,8 @@ Commit the changed source files together with the regenerated HTML.
 
 - **Adopting a new version of a research document:** follow `documents/README.md`. Never overwrite a file in `documents/archive/`.
 - **Adding a model response:** append an object to `responses` in `data/responses.json` using the field names in `_template`. Paste the model's output, unedited, into `output_markdown`.
-- **Adding an evaluation:** score the response with the instrument on `evaluations.html` and choose **Export JSON**. Paste the exported record into `evaluations` in `data/evaluations.json`.
+- **Adding an evaluation:** score the response on `score.html` and choose **Download JSON record** (and, for reading, **Download readable report**). Paste the JSON record into `evaluations` in `data/evaluations.json`. Work in the scoring tool is kept only in that browser until it is downloaded and committed; nothing is saved to GitHub automatically.
+- **Testing:** `cd tests && npm install && npm test` runs the browser test suite (Playwright with Chromium, and axe-core for accessibility).
 - **Writing findings:** create `data/Nordland_Findings.md`. Until that file exists, the Findings page shows a labelled placeholder.
 
 The build stops if a PDF no longer matches the manifest, if any line of a source document is missing from its rendered page, if the Case Record page links to any document other than the case record, if a homepage quotation or chart figure no longer matches its source, or if a version number or draft label appears in a page.

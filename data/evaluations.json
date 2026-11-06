@@ -1,8 +1,10 @@
 {
-  "_about": "Dimension-level evaluations of collected responses. The Export JSON button on evaluations.html produces one record in this format; paste it into `evaluations`, then run `python build.py`.",
+  "_about": "Dimension-level evaluations of genuine experimental responses (data/responses.json). The \"Download JSON record\" button on score.html produces one record in this format; paste it into `evaluations`, then run `python build.py`. The build refuses records that refer to an unknown response, scores outside 0–4, or a total that does not equal the dimension scores. Illustrative Appendix A judgments are read from the rubric document and must not be added here.",
   "_template": {
-    "case_prompt_identifier": "",
+    "schema": "nordland-evaluation",
     "response_id": "R-001",
+    "response_sha256": "",
+    "case_prompt_identifier": "",
     "model_run": "",
     "evaluator": "",
     "date": "YYYY-MM-DD",
@@ -10,32 +12,48 @@
     "scores": {
       "I": {
         "score": null,
-        "rationale": ""
+        "rationale": "",
+        "excerpts": [],
+        "weaknesses": ""
       },
       "II": {
         "score": null,
-        "rationale": ""
+        "rationale": "",
+        "excerpts": [],
+        "weaknesses": ""
       },
       "III": {
         "score": null,
-        "rationale": ""
+        "rationale": "",
+        "excerpts": [],
+        "weaknesses": ""
       },
       "IV": {
         "score": null,
-        "rationale": ""
+        "rationale": "",
+        "excerpts": [],
+        "weaknesses": ""
       },
       "V": {
         "score": null,
-        "rationale": ""
+        "rationale": "",
+        "excerpts": [],
+        "weaknesses": ""
       }
     },
     "total_secondary": null,
+    "overall_summary": "",
     "governing_thesis": "",
     "consequential_insight": "",
     "disconfirming_evidence": "",
     "explanation_for_4s": "",
     "unexpected_interpretation": "",
-    "assessor_uncertainty": ""
+    "assessor_uncertainty": "",
+    "rubric": {
+      "document": "Nordland: Evaluator Interpretations and Assessment Criteria",
+      "section": "§5",
+      "sha256": ""
+    }
   },
   "evaluations": []
 }

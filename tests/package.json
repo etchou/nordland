@@ -1,0 +1,7 @@
+{
+  "name": "nordland-site-tests",
+  "private": true,
+  "description": "Browser tests for the Nordland research site (scoring, import/export, navigation, accessibility, layout).",
+  "scripts": { "test": "node run-tests.mjs" },
+  "devDependencies": { "axe-core": "4.10.2" }
+}

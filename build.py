@@ -47,7 +47,7 @@ SECTIONS = [
     ("methodology", "02", "Methodology", "The research methodology paper, with the validity questions and next research steps.", None),
     ("rubric", "03", "Evaluation Rubric", "Five scoring dimensions with their exact 0–4 anchors, evaluator guidance and illustrative examples.", "evaluator"),
     ("responses", "04", "Model Responses", "Original, unedited model outputs with provenance and test conditions.", None),
-    ("evaluations", "05", "Evaluations", "Dimension-level scores, documented rationales and the scoring instrument.", "evaluator"),
+    ("evaluations", "05", "Evaluations", "Recorded evaluations, the scoring tool and side-by-side comparison of evaluations.", "evaluator"),
     ("findings", "06", "Findings", "Comparative patterns, limitations and implications.", None),
 ]
 ROMAN = ["I", "II", "III", "IV", "V"]
@@ -547,7 +547,7 @@ def build_home() -> None:
          '<a href="methodology.html">Methodology</a>; reference analysis on <a href="rubric.html#reference">Rubric</a>',
          f'{doc_link("methodology", "Beyond Explanation")}; {doc_link("validity", "Validity Questions")}; {doc_link("evaluator-criteria", "Evaluator Interpretations")} §1–3, §9', "No"),
         ("criteria", "The five dimensions, their 0–4 anchors, evidentiary guardrails, protocol and scoring record.",
-         '<a href="rubric.html">Evaluation Rubric</a>; <a href="evaluations.html#instrument">scoring instrument</a>',
+         '<a href="rubric.html">Evaluation Rubric</a>; <a href="score.html">scoring tool</a>',
          f'{doc_link("evaluator-criteria", "Evaluator Interpretations and Assessment Criteria")} §4–8', "No"),
         ("illustrative", "Three constructed essays with explained scores, and the methodology’s illustrative anchors. Written for calibration.",
          '<a href="rubric.html#calibration">Rubric, Appendix A</a>; <a href="methodology.html#appendix-illustrative-nordland-anchors-assessor-calibration">Methodology, Appendix</a>',
@@ -728,7 +728,7 @@ def build_rubric() -> None:
         ("protocol", "§7", sec_title("7."), "criteria", prose(find_section(evaluator, "7. Evaluator protocol"))),
         ("scoring-record", "§8", sec_title("8."), "criteria",
          prose(find_section(evaluator, "8. Scoring record")) +
-         site_note('An interactive version of this scoring record, with JSON and CSV export, is on the <a href="evaluations.html#instrument">Evaluations</a> page.')),
+         site_note('An interactive version of this scoring record, with JSON and CSV export, is on the <a href="score.html">Score a response</a> page.')),
         ("reference", "§1–3, §9", "Reference analysis", "interpretation", "".join(reference)),
         ("calibration", "Appendix A", sec_title("Appendix A"), "illustrative",
          prose(app_intro) + "".join(calib) +
@@ -754,58 +754,14 @@ def build_rubric() -> None:
          checks=[(full_body, "Rubric")])
 
 
-# --------------------------------------------------------------------------- 04 responses
+# --------------------------------------------------------------------------- response and evaluation records
 
 PROVENANCE = [
-    ("model", "Model identifier"), ("model_version", "Model version"), ("provider", "Provider"),
-    ("run_date", "Run date"), ("interface", "Interface / API"), ("decoding_settings", "Decoding settings"),
+    ("model", "Model name"), ("model_version", "Model version"), ("provider", "Provider"),
+    ("run_date", "Test date"), ("interface", "Interface / API"), ("decoding_settings", "Generation settings"),
     ("length_limits", "Length limits"), ("tools_available", "Tools available"),
-    ("case_prompt_identifier", "Case/prompt identifier"), ("collected_by", "Collected by"), ("word_count", "Word count"),
+    ("case_prompt_identifier", "Case/prompt identifier"), ("collected_by", "Collected by"),
 ]
-
-
-def build_responses() -> None:
-    if responses:
-        records = []
-        for r in responses:
-            prov = "".join(f"<div><dt>{e(label)}</dt><dd>{e(r.get(k) if r.get(k) not in (None, '') else '—')}</dd></div>" for k, label in PROVENANCE)
-            notes = f'<div class="verbatim" style="border-top:1px solid var(--line)"><p class="verbatim-label">Collection notes</p><p>{e(r["notes"])}</p></div>' if r.get("notes") else ""
-            records.append(f"""<article class="record" id="{e(r['id'])}">
-  <div class="record-head"><h3>{e(r.get('model') or 'Model')}</h3><span class="id">{e(r['id'])}</span></div>
-  <dl class="provenance">{prov}</dl>
-  <div class="verbatim"><p class="verbatim-label">Original output · unedited</p><div class="prose">{prose(r.get('output_markdown', ''), r['id'])}</div></div>
-  {notes}
-</article>""")
-        content = "".join(records)
-    else:
-        rows = "".join(f"<tr><th scope=\"row\">{e(label)}</th><td>—</td></tr>" for _, label in PROVENANCE)
-        content = placeholder("No model responses have been collected yet",
-            "<p>When collection begins, each run will be published here in full: the unedited output, together with its provenance and test conditions. "
-            "Ordinary and unsuccessful responses are recorded as well as strong ones.</p>"
-            "<p>Responses are added to <code>data/responses.json</code> and the page is regenerated with <code>python build.py</code>.</p>",
-            "Placeholder · awaiting data")
-        content += f"""<h3>Provenance recorded for every run</h3>
-<p>The fields follow the collection requirements in the methodology (§4.2, “Transparent run metadata”) and the evaluator protocol (§7, “At collection”).</p>
-<div class="table-wrap" role="region" tabindex="0" aria-label="Provenance fields"><table><thead><tr><th scope="col">Field</th><th scope="col">Value</th></tr></thead><tbody>{rows}
-<tr><th scope="row">Prompt supplied</th><td>Complete Nordland Case Record and essay assignment, unmodified</td></tr></tbody></table></div>"""
-    sec42 = find_section(method, "4 Evaluation methodology")
-    metadata_rule = re.search(r"(?m)^- \*\*Transparent run metadata\.\*\*.*$", sec42).group(0)
-    unassisted_rule = re.search(r"(?m)^- \*\*Unassisted first response\.\*\*.*$", sec42).group(0)
-    main = f"""{notice("Test conditions",
-        'Every model receives the same input: the complete <a href="case-record.html">Nordland Case Record</a> and its broad essay assignment (no more than 1,500 words; charts, tables and diagrams permitted). '
-        'No evaluator interpretations, rubric or examples are supplied. Outputs are published without editing.')}
-<div class="quoted-rules"><p class="kicker">From the methodology, §4.2</p>{prose(metadata_rule + chr(10) + unassisted_rule)}</div>
-<p class="fine-print">The three essays in the rubric document’s Appendix A are <a href="rubric.html#calibration">constructed illustrative examples</a>, not model responses, and are deliberately not listed here.</p>
-{content}"""
-    body = page_head("04", "Model Responses",
-                     "Original model outputs to the Nordland essay assignment, each published with its provenance and test conditions.",
-                     [("Responses collected", str(len(responses))), ("Prompt", "Fixed, identical for every run")],
-                     materials=["findings"])
-    body += f'<div class="section"><div class="container"><div class="measure-wide">{main}</div></div></div>'
-    page("responses", "Model Responses", "Original model outputs to the Nordland case, with provenance and test conditions.", body)
-
-
-# --------------------------------------------------------------------------- 05 evaluations
 
 SYNTHESIS = [
     ("governing_thesis", "Governing thesis observed"),
@@ -816,90 +772,380 @@ SYNTHESIS = [
     ("assessor_uncertainty", "Assessor confidence / unresolved calibration issue"),
 ]
 
+ASSIGNMENT = re.search(r"(?ms)^Essay assignment\s*\n+(.+)$", case_src).group(1).strip()
+CASE_ID = f"Nordland Case Record and essay assignment (PDF SHA-256 {DOCS['case-record']['sha256'][:12]})"
+
+
+def text_of(markdown: str) -> str:
+    return plain(BeautifulSoup(md(markdown), "html.parser").get_text(" "))
+
+
+def response_record(base: dict, markdown: str) -> dict:
+    text = text_of(markdown)
+    return {**base,
+            "output_markdown": markdown,
+            "output_html": prose(markdown, base["id"].lower()),
+            "output_text": text,
+            "word_count": len(re.findall(r"\S+", text)),
+            "sha256": hashlib.sha256(markdown.encode("utf-8")).hexdigest()}
+
+
+def illustrative_examples() -> tuple[list[dict], list[dict]]:
+    """The three constructed essays and their explained scores, read from Appendix A of the rubric document."""
+    appendix = find_section(evaluator, "Appendix A").split("\n---", 1)[0]
+    status = re.search(r"(?m)^\*\*Status and safeguards\.\*\*.*$", appendix).group(0)
+    out_r, out_e = [], []
+    for part in re.split(r"(?m)^(?=### A\.\d)", appendix)[1:]:
+        head_line, _, body = part.partition("\n")
+        m = re.match(r"### (A\.\d) (Response ([A-Z])) — (.+)", head_line)
+        if not m:
+            continue                                   # A.4 is the cross-response table
+        section, name, letter, label = m.groups()
+        stated = re.search(r"\*\*Illustrative model response \((.+?)\)\*\*", body).group(1)
+        essay = "\n".join(l[1:].strip() for l in body.splitlines() if l.startswith(">")).strip()
+        rid = f"ILL-{letter}"
+        out_r.append(response_record({
+            "id": rid, "kind": "illustrative", "title": f"{name} — {label}",
+            "source": f"Appendix A, §{section}", "source_doc": "evaluator-criteria",
+            "stated_length": stated, "status_note": status,
+        }, essay))
+        scores = {}
+        for roman, score, rationale in re.findall(r"(?m)^\| (I|II|III|IV|V)\. [^|]+\| \*\*(\d) / 4\*\* \| (.+?) \|\s*$", body):
+            scores[roman] = {"score": int(score), "rationale": rationale.strip(), "excerpts": [], "weaknesses": ""}
+        total = re.search(r"(?m)^\| \*\*Total \(secondary\)\*\* \| \*\*(\d+) / 20\*\* \| (.+?) \|\s*$", body)
+        note = re.search(r"(?m)^\*\*Calibration note\.\*\* (.+)$", body).group(1)
+        if sorted(scores) != sorted(ROMAN) or sum(s["score"] for s in scores.values()) != int(total.group(1)):
+            raise RuntimeError(f"Appendix {section}: dimension scores do not add up to the stated total")
+        out_e.append({
+            "id": f"EV-{rid}", "response_id": rid, "evaluation_kind": "illustrative",
+            "evaluator": "Rubric document, Appendix A", "date": "",
+            "source": f"Appendix A, §{section}: Scores and passage-specific rationales",
+            "scores": scores, "total_secondary": int(total.group(1)),
+            "overall_summary": total.group(2).strip(), "calibration_note": note,
+        })
+    if [r["id"] for r in out_r] != ["ILL-A", "ILL-B", "ILL-C"]:
+        raise RuntimeError("Expected three illustrative responses in Appendix A")
+    return out_r, out_e
+
+
+def experimental_records() -> tuple[list[dict], list[dict]]:
+    """Genuine model outputs and their evaluations from data/, validated for traceability."""
+    recs = []
+    for r in responses:
+        if not r.get("id") or not r.get("output_markdown", "").strip():
+            raise RuntimeError("Each response in data/responses.json needs an id and output_markdown")
+        recs.append(response_record({**{k: r.get(k) for k, _ in PROVENANCE}, "id": r["id"], "kind": "experimental",
+                                     "title": r.get("model") or r["id"], "notes": r.get("notes", "")},
+                                    r["output_markdown"]))
+    ids = {r["id"] for r in recs}
+    if len(ids) != len(recs):
+        raise RuntimeError("Duplicate response ids in data/responses.json")
+    evs = []
+    for i, ev in enumerate(evaluations, 1):
+        if ev.get("response_id") not in ids:
+            raise RuntimeError(f"Evaluation {i} refers to unknown response {ev.get('response_id')!r}")
+        scores = {}
+        for roman in ROMAN:
+            s = (ev.get("scores") or {}).get(roman) or {}
+            v = s.get("score")
+            if v is not None and v not in (0, 1, 2, 3, 4):
+                raise RuntimeError(f"Evaluation {i}: dimension {roman} score {v!r} is not 0–4")
+            ex = s.get("excerpts") or []
+            scores[roman] = {"score": v, "rationale": s.get("rationale", ""), "weaknesses": s.get("weaknesses", ""),
+                             "excerpts": [ex] if isinstance(ex, str) else ex}
+        vals = [scores[r]["score"] for r in ROMAN]
+        total = sum(vals) if None not in vals else None
+        if ev.get("total_secondary") not in (None, total):
+            raise RuntimeError(f"Evaluation {i}: stated total {ev.get('total_secondary')} does not equal the dimension scores")
+        evs.append({**ev, "id": ev.get("id") or f"EV-{ev['response_id']}-{i}", "evaluation_kind": "experimental",
+                    "scores": scores, "total_secondary": total})
+    return recs, evs
+
+
+ILL_RESPONSES, ILL_EVALS = illustrative_examples()
+EXP_RESPONSES, EXP_EVALS = experimental_records()
+ALL_RESPONSES = EXP_RESPONSES + ILL_RESPONSES
+ALL_EVALS = EXP_EVALS + ILL_EVALS
+
+
+def site_data_script() -> str:
+    """Everything the browser tools need, embedded in the page so the site works without a server."""
+    data = {
+        "rubric": {
+            "document": DOCS["evaluator-criteria"]["title"], "section": "§5",
+            "pdf": DOCS["evaluator-criteria"]["pdf"], "sha256": DOCS["evaluator-criteria"]["sha256"],
+            "level4_note": re.sub(r"\*\*", "", rubric_coda),
+            "dimensions": [{"roman": d["roman"], "name": d["name"], "subtitle": d["subtitle"], "focus": d.get("focus", ""),
+                            "anchors": {str(k): v for k, v in d["anchors"].items()}} for d in dims],
+        },
+        "case_prompt": {"identifier": CASE_ID, "assignment": ASSIGNMENT, "pdf": DOCS["case-record"]["pdf"]},
+        "responses": [{k: v for k, v in r.items() if k != "output_markdown"} for r in ALL_RESPONSES],
+        "evaluations": ALL_EVALS,
+    }
+    raw = json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
+    return f'<script type="application/json" id="nordland-data">{raw}</script>\n'
+
+
+def kind_tag(kind: str) -> str:
+    return material_tag("findings", "Genuine experimental output") if kind == "experimental" else \
+        material_tag("illustrative", "Constructed calibration example; not a model output")
+
+
+def eval_tabs(current: str) -> str:
+    tabs = [("evaluations", "Recorded evaluations"), ("score", "Score a response"), ("compare", "Compare evaluations")]
+    items = "".join(f'<li><a href="{s}.html"{" aria-current=\"page\"" if s == current else ""}>{e(t)}</a></li>' for s, t in tabs)
+    return f'<nav class="doc-tabs" aria-label="Evaluation tools"><ol>{items}</ol></nav>'
+
+
+def score_bars(scores: dict, label: str) -> str:
+    """Static horizontal bar chart of a five-dimension profile (0–4 scale)."""
+    rows, aria = [], []
+    for d in dims:
+        v = (scores.get(d["roman"]) or {}).get("score")
+        aria.append(f'{d["roman"]} {d["name"]}: {"not scored" if v is None else f"{v} of 4"}')
+        rows.append(f'<div class="bar-row"><span class="bar-label">{d["roman"]}. {e(d["name"])}</span>'
+                    f'<span class="bar-track{" is-empty" if v is None else ""}"><span class="bar-fill" style="width:{0 if v is None else v * 25}%"></span></span>'
+                    f'<span class="bar-value">{"—" if v is None else v}</span></div>')
+    return f'<div class="bars" role="img" aria-label="{e(label)}: {e("; ".join(aria))}">{"".join(rows)}<div class="bar-scale" aria-hidden="true"><span></span><span class="ticks"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span></span><span></span></div></div>'
+
+
+# --------------------------------------------------------------------------- 04 responses
+
+def provenance_list(r: dict) -> str:
+    if r["kind"] == "illustrative":
+        rows = [("Model", "None. A constructed calibration example"),
+                ("Source", f'{r["source"]}, {doc_link("evaluator-criteria", "Evaluator Interpretations and Assessment Criteria")}'),
+                ("Prompt", "The same broad Nordland essay assignment"),
+                ("Test date and settings", "Not applicable"),
+                ("Stated length", e(r["stated_length"])),
+                ("Words (counted)", str(r["word_count"]))]
+        return "".join(f"<div><dt>{e(k)}</dt><dd>{v}</dd></div>" for k, v in rows)
+    rows = [(label, r.get(k)) for k, label in PROVENANCE] + [("Words (counted)", r["word_count"])]
+    return "".join(f"<div><dt>{e(k)}</dt><dd>{e(v) if v not in (None, '') else '<span class=muted>Not recorded</span>'}</dd></div>" for k, v in rows)
+
+
+def response_article(r: dict) -> str:
+    n_ev = sum(1 for ev in ALL_EVALS if ev["response_id"] == r["id"])
+    first = next((ev["id"] for ev in ALL_EVALS if ev["response_id"] == r["id"]), None)
+    ev_link = (f'<a href="evaluations.html#ev-{e(first)}">{n_ev} recorded evaluation{"s" if n_ev != 1 else ""}</a>' if n_ev
+               else '<span class="muted">No recorded evaluations</span>')
+    notes = f'<p class="fine-print">Collection notes: {e(r["notes"])}</p>' if r.get("notes") else ""
+    status = f'<div class="record-status">{prose(r["status_note"])}</div>' if r.get("status_note") else ""
+    return f"""<article class="record record--{r['kind']}" id="{e(r['id'])}" aria-labelledby="{e(r['id'])}-title">
+  <div class="record-head"><div>{kind_tag(r['kind'])}<h3 id="{e(r['id'])}-title">{e(r['title'])}</h3></div><span class="id">{e(r['id'])}</span></div>
+  <dl class="provenance">{provenance_list(r)}</dl>
+  <div class="verbatim">
+    <p class="verbatim-label">{'Full response · wording preserved from the source document' if r['kind'] == 'illustrative' else 'Full original response · unedited'}</p>
+    <div class="prose response-text">{r['output_html']}</div>
+  </div>
+  <div class="record-foot">{status}{notes}
+    <div class="record-actions"><a class="btn" href="score.html#evaluate-{e(r['id'])}">Score this response</a>
+    <a class="btn btn--ghost" href="compare.html">Compare</a><span class="fine-print">{ev_link} · Text SHA-256 {r['sha256'][:12]}</span></div>
+  </div>
+</article>"""
+
+
+def build_responses() -> None:
+    sec42 = find_section(method, "4 Evaluation methodology")
+    rules = "\n".join(re.search(rf"(?m)^- \*\*{re.escape(k)}\*\*.*$", sec42).group(0)
+                      for k in ["Stable case and prompt.", "Transparent run metadata.", "Unassisted first response."])
+    if EXP_RESPONSES:
+        experimental = "".join(response_article(r) for r in EXP_RESPONSES)
+    else:
+        experimental = placeholder("No experimental responses have been collected",
+            "<p>No model has yet been run on the Nordland Case Record for this study. Genuine outputs will appear here, in full and unedited, "
+            "with the model name and version, test date, generation settings and the exact prompt used.</p>"
+            "<p>Responses are added to <code>data/responses.json</code> and the site is regenerated with <code>python build.py</code>.</p>",
+            "No records")
+    illustrative = "".join(response_article(r) for r in ILL_RESPONSES)
+    main = f"""<section aria-labelledby="conditions">{h2("conditions", "4.1", "Prompt and test conditions")}{material_tag("evidence")}
+<p>Every experimental run receives the same input: the complete <a href="case-record.html">Nordland Case Record</a>, ending with this essay assignment, and nothing else.</p>
+<blockquote class="assignment-quote"><p>{e(ASSIGNMENT)}</p></blockquote>
+<p class="fine-print">Case/prompt identifier: {e(CASE_ID)} · {doc_link("case-record", "Open the PDF")}</p>
+<div class="quoted-rules"><p class="kicker">From the methodology, §4.2</p>{prose(rules)}</div>
+</section><hr>
+<section aria-labelledby="experimental">{h2("experimental", "4.2", "Experimental responses")}{material_tag("findings", "Genuine model outputs")}
+<p>Outputs collected from identified AI models under the conditions above. Ordinary and unsuccessful responses are recorded as well as strong ones.</p>
+{experimental}</section><hr>
+<section aria-labelledby="illustrative">{h2("illustrative", "4.3", "Illustrative examples")}{material_tag("illustrative")}
+<p>The three constructed essays from Appendix A of {doc_link("evaluator-criteria", "Nordland: Evaluator Interpretations and Assessment Criteria")}, reproduced so that the scoring and comparison tools can be learned and calibrated. They are not experimental results.</p>
+{illustrative}</section>"""
+    items = [("conditions", "Prompt and test conditions", 2), ("experimental", "Experimental responses", 2)] + \
+            [(r["id"], r["id"], 3) for r in EXP_RESPONSES] + [("illustrative", "Illustrative examples", 2)] + \
+            [(r["id"], r["title"].split(" — ")[0], 3) for r in ILL_RESPONSES]
+    body = page_head("04", "Model Responses",
+                     "Complete model responses to the Nordland essay assignment, each with its provenance and test conditions. Genuine experimental outputs and constructed illustrative examples are kept in separate, labelled groups.",
+                     [("Experimental responses", str(len(EXP_RESPONSES))), ("Illustrative examples", str(len(ILL_RESPONSES)))],
+                     materials=["findings", "illustrative"])
+    body += doc_layout(toc(items), main)
+    page("responses", "Model Responses", "Complete model responses to the Nordland case, with provenance and test conditions.", body,
+         checks=[(r["output_markdown"], r["id"]) for r in ALL_RESPONSES] + [(ASSIGNMENT, "Assignment")])
+
+
+# --------------------------------------------------------------------------- 05 evaluations
 
 def score_of(ev: dict, roman: str):
     s = (ev.get("scores") or {}).get(roman) or {}
     return s.get("score")
 
 
-def build_evaluations() -> None:
-    by_id = {r["id"]: r for r in responses}
-    if evaluations:
-        head_cells = "".join(f'<th scope="col" class="num" title="{e(d["name"])}">{d["roman"]}</th>' for d in dims)
-        rows = []
-        for ev in evaluations:
-            resp = by_id.get(ev.get("response_id"), {})
-            scores = [score_of(ev, r) for r in ROMAN]
-            total = sum(scores) if all(s is not None for s in scores) else None
-            cells = "".join(f'<td class="num">{"—" if s is None else s}</td>' for s in scores)
-            rows.append(f'<tr><th scope="row"><a href="#ev-{e(ev.get("response_id"))}-{e(slugify(ev.get("evaluator", "")))}">{e(ev.get("response_id"))}</a></th>'
-                        f'<td>{e(resp.get("model", "—"))}</td><td>{e(ev.get("evaluator", "—"))}</td>{cells}<td class="num"><strong>{"—" if total is None else total}</strong></td></tr>')
-        summary = (f'<div class="table-wrap" role="region" tabindex="0" aria-label="Score profiles"><table><caption>Dimension-level score profiles</caption>'
-                   f'<thead><tr><th scope="col">Response</th><th scope="col">Model</th><th scope="col">Evaluator</th>{head_cells}<th scope="col" class="num">Total / 20</th></tr></thead>'
-                   f'<tbody>{"".join(rows)}</tbody></table></div>')
-        details = []
-        for ev in evaluations:
-            dim_rows = "".join(
-                f'<tr><th scope="row">{d["roman"]}. {e(d["name"])}</th><td class="num">{"—" if score_of(ev, d["roman"]) is None else score_of(ev, d["roman"])}</td>'
-                f'<td>{e(((ev.get("scores") or {}).get(d["roman"]) or {}).get("rationale", ""))}</td></tr>' for d in dims)
-            notes = "".join(f"<dt>{e(lbl)}</dt><dd>{e(ev[k])}</dd>" for k, lbl in SYNTHESIS if ev.get(k))
-            details.append(f"""<article class="record" id="ev-{e(ev.get('response_id'))}-{e(slugify(ev.get('evaluator', '')))}">
-  <div class="record-head"><h3>Evaluation of <a href="responses.html#{e(ev.get('response_id'))}">{e(ev.get('response_id'))}</a></h3>
-  <span class="id">{e(ev.get('evaluator', ''))} · {e(ev.get('date', ''))}{' · blind to model' if ev.get('blind_to_model') else ''}</span></div>
-  <div class="verbatim"><div class="table-wrap" role="region" tabindex="0" aria-label="Scores and rationales"><table><thead><tr><th scope="col">Dimension</th><th scope="col" class="num">Score</th><th scope="col">Passage-specific rationale</th></tr></thead><tbody>{dim_rows}</tbody></table></div>
-  {f'<dl class="notes-list">{notes}</dl>' if notes else ''}</div>
-</article>""")
-        content = summary + "".join(details)
-    else:
-        content = placeholder("No evaluations have been recorded yet",
-            "<p>Scores will appear here once model responses have been collected and independently assessed. Each evaluation will show the five dimension scores, "
-            "a passage-specific rationale for each, the secondary total, and the evaluator’s synthesis notes.</p>"
-            "<p>The scores attached to the three constructed essays in Appendix A are illustrative calibration judgments, not evaluations, and are shown only on the "
-            '<a href="rubric.html#calibration">Rubric</a> page.</p>', "Placeholder · awaiting data")
+def evaluation_article(ev: dict) -> str:
+    resp = next(r for r in ALL_RESPONSES if r["id"] == ev["response_id"])
+    rows = []
+    for d in dims:
+        s = ev["scores"].get(d["roman"]) or {}
+        v = s.get("score")
+        excerpts = "".join(f"<li>{e(x)}</li>" for x in s.get("excerpts") or [])
+        rows.append(f"""<tr><th scope="row">{d['roman']}. {e(d['name'])}</th><td class="num">{'—' if v is None else f'{v}/4'}</td>
+<td>{e(s.get('rationale', ''))}{f'<p class="cell-label">Supporting excerpts</p><ul class="excerpts">{excerpts}</ul>' if excerpts else ''}{f'<p class="cell-label">Weaknesses or uncertainty</p><p>{e(s["weaknesses"])}</p>' if s.get('weaknesses') else ''}
+<p class="cell-anchor">{'' if v is None else f'Anchor {v}: {e(d["anchors"][v])}'}</p></td></tr>""")
+    total = ev.get("total_secondary")
+    extra = "".join(f"<dt>{e(lbl)}</dt><dd>{e(ev[k])}</dd>" for k, lbl in [("overall_summary", "Overall evaluation summary")] + SYNTHESIS + [("calibration_note", "Calibration note")] if ev.get(k))
+    meta = " · ".join(x for x in [ev.get("evaluator"), ev.get("date"), "blind to model" if ev.get("blind_to_model") else "", ev.get("source", "")] if x)
+    return f"""<article class="record record--{ev['evaluation_kind']}" id="ev-{e(ev['id'])}">
+  <div class="record-head"><div>{kind_tag(ev['evaluation_kind']) if ev['evaluation_kind'] == 'illustrative' else material_tag('findings', 'Evaluation of a genuine output')}
+  <h3>Evaluation of <a href="responses.html#{e(resp['id'])}">{e(resp['title'])}</a></h3></div><span class="id">{e(meta)}</span></div>
+  <div class="eval-grid"><div>{score_bars(ev['scores'], 'Score profile')}<p class="eval-total"><span>Total (secondary)</span> <strong>{'—' if total is None else total}</strong> / 20</p></div>
+  <div class="table-wrap" role="region" tabindex="0" aria-label="Scores, rationales and anchors"><table class="eval-table"><thead><tr><th scope="col">Dimension</th><th scope="col" class="num">Score</th><th scope="col">Evaluator rationale and evidence</th></tr></thead><tbody>{''.join(rows)}</tbody></table></div></div>
+  {f'<dl class="notes-list">{extra}</dl>' if extra else ''}
+</article>"""
 
-    options = '<option value="">—</option>' + "".join(f'<option value="{i}">{i}</option>' for i in range(5))
-    score_rows = "".join(f"""<div class="score-row" data-dim="{d['roman']}">
-  <div><h4>{d['roman']}. {e(d['name'])}</h4><p class="fine-print" style="margin:4px 0 0">{e(d.get('focus', ''))}</p></div>
-  <label class="field">Score (0–4)<select id="score_{d['roman']}" name="score_{d['roman']}" data-score="{d['roman']}">{options}</select></label>
-  <p class="anchor-now" data-anchor aria-live="polite">No score selected.</p>
-  <label class="field field--rationale">Supporting passage(s) and rationale<span class="hint">Cite specific passages with a one- or two-sentence reason. For every 4, identify the step beyond 3.</span>
-    <textarea id="rationale_{d['roman']}" name="rationale_{d['roman']}" rows="3"></textarea></label>
-</div>""" for d in dims)
-    synth = "".join(f'<label class="field">{e(lbl)}<textarea id="{k}" name="{k}" rows="3"></textarea></label>' for k, lbl in SYNTHESIS)
-    instrument = f"""<form class="scorer" id="score-form" autocomplete="off" novalidate>
-  <div class="scorer-meta">
-    <label class="field">Case/prompt identifier<input id="case_prompt_identifier" name="case_prompt_identifier" placeholder="Case record and prompt used"></label>
-    <label class="field">Response ID<input id="response_id" name="response_id" placeholder="e.g. R-001"></label>
-    <label class="field">Model and run identifier<input id="model_run" name="model_run" placeholder="Model, version and run"></label>
-    <label class="field">Evaluator<input id="evaluator" name="evaluator" placeholder="Assessor identifier"></label>
-    <label class="field">Date<input id="date" name="date" type="date"></label>
-    <label class="check"><input type="checkbox" id="blind_to_model" name="blind_to_model"> Scored blind to model identity</label>
-  </div>
-  {score_rows}
-  <div class="score-total" aria-live="polite"><div><div class="fine-print">Total (secondary)</div><span class="total" id="score-total">0</span> <span class="fine-print">/ 20</span></div><span class="state" id="score-state">0 of 5 dimensions scored</span></div>
-  <div class="synthesis">{synth}</div>
-  <div class="btn-row scorer-actions">
-    <button class="btn" type="button" id="export-json">Export JSON</button>
-    <button class="btn btn--ghost" type="button" id="export-csv">Export CSV</button>
-    <button class="btn btn--ghost" type="button" id="copy-record">Copy JSON</button>
-    <button class="btn btn--ghost" type="button" id="reset-form">Clear form</button>
-  </div>
-  <p class="status-message" data-status role="status" aria-live="polite"></p>
-  <p class="fine-print">Fields follow the scoring record in the rubric document (§8). Scoring runs entirely in your browser; nothing is transmitted or saved automatically. The JSON export matches the record format in <code>data/evaluations.json</code>.</p>
-</form>"""
-    main = (f'<section aria-labelledby="scores">{h2("scores", "5.1", "Recorded evaluations")}{material_tag("findings")}{content}</section><hr>'
-            f'<section aria-labelledby="instrument">{h2("instrument", "5.2", "Scoring instrument")}{material_tag("criteria")}'
-            + notice("Evaluator-only.", "Score each dimension independently, citing specific passages. Evaluators should score unseen responses before consulting Appendix A, where feasible, to reduce anchoring. "
-                     'Anchors are from the <a href="rubric.html#dimensions">rubric</a>.', "evaluator")
-            + instrument + "</section>")
+
+def build_evaluations() -> None:
+    if EXP_EVALS:
+        experimental = "".join(evaluation_article(ev) for ev in EXP_EVALS)
+    else:
+        experimental = placeholder("No experimental evaluations have been recorded",
+            "<p>Evaluations of genuine model outputs will appear here once responses have been collected and independently scored. "
+            "Each will show its five dimension scores, the evaluator’s passage-specific rationale and supporting excerpts, and the rubric anchor for each score.</p>"
+            '<p>To record one, score a response on the <a href="score.html">Score a response</a> tab, download the JSON, and add it to <code>data/evaluations.json</code> in the repository.</p>',
+            "No records")
+    illustrative = "".join(evaluation_article(ev) for ev in ILL_EVALS)
+    main = (eval_tabs("evaluations") +
+            f'<section aria-labelledby="ev-experimental">{h2("ev-experimental", "5.1", "Evaluations of experimental responses")}{material_tag("findings")}{experimental}</section><hr>'
+            f'<section aria-labelledby="ev-illustrative">{h2("ev-illustrative", "5.2", "Illustrative calibration judgments")}{material_tag("illustrative")}'
+            f'<p>The explained scores for the three constructed essays, from Appendix A of the rubric document. The document describes them as “proposed calibration judgments, not validated performance measurements.”</p>'
+            f'{illustrative}</section>')
+    if "proposed calibration judgments, not validated performance measurements" not in eval_src:
+        raise RuntimeError("Appendix A status wording changed")
     body = page_head("05", "Evaluations",
-                     "Dimension-level scores for each collected response, with documented evaluator rationales. The five-score profile is the primary result.",
-                     [("Evaluations recorded", str(len(evaluations))), ("Protocol", '<a href="rubric.html#protocol">Rubric document §7</a>')],
-                     materials=["findings", "criteria"])
-    body += doc_layout(toc([("scores", "Recorded evaluations", 2), ("instrument", "Scoring instrument", 2)]), main)
-    rubric_js = json.dumps([{"roman": d["roman"], "name": d["name"], "anchors": d["anchors"]} for d in dims], ensure_ascii=False).replace("<", "\\u003c")
-    page("evaluations", "Evaluations", "Dimension-level scores and evaluator rationales for model responses to the Nordland case.", body,
-         extra_scripts=f"<script>window.NORDLAND_RUBRIC = {rubric_js};</script>\n")
+                     "Dimension-level scores with documented rationales, each traceable to its response, the rubric anchor and the evaluator’s evidence. The five-score profile is the primary result; the total out of 20 is a secondary summary.",
+                     [("Experimental evaluations", str(len(EXP_EVALS))), ("Illustrative calibration judgments", str(len(ILL_EVALS))),
+                      ("Rubric", f'{doc_link("evaluator-criteria", "Evaluator Interpretations and Assessment Criteria")} §5')],
+                     materials=["findings", "illustrative"])
+    body += doc_layout(toc([("ev-experimental", "Experimental evaluations", 2), ("ev-illustrative", "Illustrative calibration judgments", 2)]), main)
+    page("evaluations", "Evaluations", "Recorded evaluations of model responses to the Nordland case, traceable to response, rubric and evidence.", body)
+
+
+def build_score() -> None:
+    dims_html = []
+    for d in dims:
+        r = d["roman"]
+        options = "".join(
+            f'<label class="anchor-option"><input type="radio" name="score_{r}" value="{i}" data-dim="{r}">'
+            f'<span class="anchor-level">{i}</span><span class="anchor-text">{e(d["anchors"][i])}</span></label>' for i in range(5))
+        dims_html.append(f"""<fieldset class="dim-card" id="dim-{r}" data-dim="{r}">
+  <legend><span class="roman">{r}.</span> {e(d['name'])} — {e(d['subtitle'])}</legend>
+  <p class="dim-focus">{e(d.get('focus', ''))}</p>
+  <div class="anchor-options" role="radiogroup" aria-label="Score for {e(d['name'])}, 0 to 4">{options}</div>
+  <button type="button" class="link-btn" data-clear-score="{r}">Clear score</button>
+  <div class="dim-fields">
+    <label class="field" for="rationale_{r}">Evaluator rationale<span class="hint">Cite specific passages and give a one- or two-sentence reason. For a 4, state the step beyond level 3.</span>
+      <textarea id="rationale_{r}" data-field="rationale" data-dim="{r}" rows="3"></textarea></label>
+    <div class="field">
+      <label for="excerpts_{r}">Supporting excerpts from the response<span class="hint">Paste exact wording, one excerpt per paragraph (separate with a blank line), or select text in the response and use the button.</span></label>
+      <textarea id="excerpts_{r}" data-field="excerpts" data-dim="{r}" rows="3"></textarea>
+      <div class="excerpt-tools"><button type="button" class="btn btn--ghost btn--small" data-add-selection="{r}">Add selected response text</button><span class="excerpt-check" data-excerpt-check="{r}" aria-live="polite"></span></div>
+    </div>
+    <label class="field" for="weaknesses_{r}">Weaknesses, uncertainty or unresolved questions
+      <textarea id="weaknesses_{r}" data-field="weaknesses" data-dim="{r}" rows="2"></textarea></label>
+  </div>
+  <ul class="dim-warnings" data-warnings="{r}" aria-live="polite"></ul>
+</fieldset>""")
+    synth = "".join(f'<label class="field" for="{k}">{e(lbl)}<textarea id="{k}" data-meta="{k}" rows="2"></textarea></label>' for k, lbl in SYNTHESIS)
+    main = eval_tabs("score") + f"""
+<noscript><p class="notice">The scoring tool needs JavaScript. The rubric itself is on the <a href="rubric.html">Evaluation Rubric</a> page.</p></noscript>
+{notice("How evaluations are saved",
+        "Your work stays in this browser: a draft is kept in local storage until you clear it, and nothing is sent anywhere. "
+        "Nothing you do here changes the published site or the GitHub repository. To keep an evaluation, download the JSON record and the readable report. "
+        "To publish it, add the JSON record to <code>data/evaluations.json</code> in the repository and rebuild.")}
+<form id="score-tool" class="score-tool" autocomplete="off" novalidate>
+  <div class="tool-setup">
+    <label class="field" for="response_select">Response to score
+      <select id="response_select" data-meta="response_id"></select></label>
+    <div class="selected-kind" id="selected-kind" aria-live="polite"></div>
+  </div>
+  <div class="tool-layout">
+    <section class="tool-response" aria-labelledby="response-heading">
+      <details class="response-panel" open><summary id="response-heading">Response text</summary>
+        <div class="response-meta" id="response-meta"></div>
+        <div class="prose response-text" id="response-text" tabindex="0" aria-label="Full response text"></div>
+      </details>
+    </section>
+    <div class="tool-form">
+      <fieldset class="meta-card"><legend>Scoring record</legend>
+        <div class="scorer-meta">
+          <label class="field" for="case_prompt_identifier">Case/prompt identifier<input id="case_prompt_identifier" data-meta="case_prompt_identifier"></label>
+          <label class="field" for="model_run">Model and run identifier<input id="model_run" data-meta="model_run"></label>
+          <label class="field" for="evaluator">Evaluator<input id="evaluator" data-meta="evaluator" placeholder="Name or assessor identifier"></label>
+          <label class="field" for="date">Date<input id="date" type="date" data-meta="date"></label>
+          <label class="check"><input type="checkbox" id="blind_to_model" data-meta="blind_to_model"> Scored blind to model identity</label>
+        </div>
+      </fieldset>
+      <p class="fine-print">{e(re.sub(r"[*]", "", rubric_coda))} Anchors are quoted from {doc_link("evaluator-criteria", "the rubric document")} §5.</p>
+      {''.join(dims_html)}
+      <section class="summary-card" aria-labelledby="summary-heading">
+        <h3 id="summary-heading">Evaluation summary</h3>
+        <div id="score-chart"></div>
+        <p class="eval-total" aria-live="polite"><span>Total (secondary)</span> <strong id="score-total">—</strong> / 20 <span class="state" id="score-state"></span></p>
+        <label class="field" for="overall_summary">Overall evaluation summary<textarea id="overall_summary" data-meta="overall_summary" rows="4"></textarea></label>
+        <div class="synthesis">{synth}</div>
+        <ul class="dim-warnings" id="record-warnings" aria-live="polite"></ul>
+        <div class="btn-row">
+          <button class="btn" type="button" id="download-json">Download JSON record</button>
+          <button class="btn btn--ghost" type="button" id="download-report">Download readable report</button>
+          <label class="btn btn--ghost file-btn" for="import-json">Load a JSON record</label>
+          <input type="file" id="import-json" accept="application/json,.json" class="visually-hidden">
+          <button class="btn btn--ghost" type="button" id="clear-form">Clear form</button>
+        </div>
+        <p class="status-message" id="tool-status" role="status" aria-live="polite"></p>
+      </section>
+    </div>
+  </div>
+</form>"""
+    body = page_head("05", "Score a Response",
+                     "Score any published response on the five official dimensions. Scores, anchors, rationales and supporting excerpts are recorded together so every score can be traced to its evidence.",
+                     [("Rubric", f'{doc_link("evaluator-criteria", "Evaluator Interpretations and Assessment Criteria")} §5'), ("Scoring", "Manual; nothing is scored automatically")],
+                     materials=["criteria"])
+    body += f'<div class="section"><div class="container">{main}</div></div>'
+    page("score", "Score a Response", "Interactive scoring tool for the Nordland rubric.", body, current="evaluations",
+         extra_scripts=site_data_script() + '<script src="assets/js/evaluation.js" defer></script>\n',
+         checks=[(f"{d['anchors'][i]}", f"anchor {d['roman']}{i}") for d in dims for i in range(5)])
+
+
+def build_compare() -> None:
+    main = eval_tabs("compare") + f"""
+<noscript><p class="notice">The comparison tool needs JavaScript. Recorded evaluations are listed on the <a href="evaluations.html">Recorded evaluations</a> tab.</p></noscript>
+{notice("Reading a comparison",
+        "The five-score profile is the primary result; the total out of 20 is a secondary summary. A higher total is not, by itself, evidence of better conceptual reasoning. "
+        "Read the evaluators’ rationales and evidence for each dimension before drawing conclusions. Differences are explained only by what evaluators wrote; this tool does not generate explanations or scores.")}
+<div class="compare-setup">
+  <fieldset class="compare-pick"><legend>Responses to compare (choose two or more)</legend><div id="compare-options"></div></fieldset>
+  <div class="compare-load">
+    <p class="fine-print">Add evaluations you have downloaded but not yet published. They are used only in this browser session and are labelled as unpublished.</p>
+    <label class="btn btn--ghost file-btn" for="compare-import">Load evaluation JSON files</label>
+    <input type="file" id="compare-import" accept="application/json,.json" multiple class="visually-hidden">
+    <p class="status-message" id="compare-status" role="status" aria-live="polite"></p>
+  </div>
+</div>
+<div id="compare-output" aria-live="polite"></div>
+<div class="btn-row"><button class="btn btn--ghost" type="button" id="download-comparison">Download comparison report</button></div>"""
+    body = page_head("05", "Compare Evaluations",
+                     "Set two or more responses side by side: dimension scores, totals, the evaluators’ reasoning for each score, and agreement between evaluators where more than one evaluation exists.",
+                     [("Basis", "Recorded evaluations and files you load")], materials=["findings", "illustrative"])
+    body += f'<div class="section"><div class="container">{main}</div></div>'
+    page("compare", "Compare Evaluations", "Compare evaluations of Nordland model responses dimension by dimension.", body, current="evaluations",
+         extra_scripts=site_data_script() + '<script src="assets/js/evaluation.js" defer></script>\n')
 
 
 # --------------------------------------------------------------------------- 06 findings
@@ -977,7 +1223,7 @@ def build_redirects() -> None:
 
 def check_no_version_labels() -> None:
     """No version numbers or draft labels in any generated page's visible text or titles."""
-    pattern = re.compile(r"\b(v\d+(?:[._]\d+)+|version \d|draft)\b", re.I)
+    pattern = re.compile(r"\b(?:[vV]\d+(?:[._]\d+)+|[Vv]ersion \d|[Dd]raft \d|DRAFT)\b")
     for f in ROOT.glob("*.html"):
         text = BeautifulSoup(f.read_text(encoding="utf-8"), "html.parser")
         visible = text.get_text(" ") + " " + " ".join(a.get("href", "") for a in text.find_all("a"))
@@ -995,8 +1241,10 @@ if __name__ == "__main__":
     build_rubric()
     build_responses()
     build_evaluations()
+    build_score()
+    build_compare()
     build_findings()
     build_redirects()
     check_no_version_labels()
-    print("Built: index, case-record, methodology, validity, rubric, responses, evaluations, findings (+ redirects case.html, evaluation.html)")
+    print("Built: index, case-record, methodology, validity, rubric, responses, evaluations, score, compare, findings (+ redirects case.html, evaluation.html)")
     print(f"Responses: {len(responses)} · Evaluations: {len(evaluations)} · Findings file: {'yes' if findings_src else 'no'}")
