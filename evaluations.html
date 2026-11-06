@@ -6,7 +6,6 @@
 <title>Evaluations — Beyond Explanation</title>
 <meta name="description" content="Dimension-level scores and evaluator rationales for model responses to the Nordland case.">
 <meta name="theme-color" content="#1b2f4b">
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Serif:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
@@ -24,47 +23,49 @@
 <header class="page-head"><div class="container">
   <p class="eyebrow">Section 05</p>
   <h1>Evaluations</h1>
-  <p class="lede">Dimension-level scores for each collected response, with documented evaluator rationales. The five-score profile is the primary result.</p><ul class="page-meta"><li><strong>Evaluations recorded:</strong> 0</li><li><strong>Protocol:</strong> <a href="rubric.html#protocol">Section 3.4</a></li></ul>
-</div></header><div class="section"><div class="container doc-layout"><nav class="toc" aria-label="On this page"><p class="toc-title">On this page</p><ol><li><a href="#scores">Recorded evaluations</a></li><li><a href="#instrument">Scoring instrument</a></li></ol></nav><div class="doc-main"><section aria-labelledby="scores"><p class="kicker">5.1</p><h2 id="scores">Recorded evaluations</h2><div class="placeholder"><span class="status">Placeholder · awaiting data</span><h3>No evaluations have been recorded yet</h3><p>Scores will appear here once model responses have been collected and independently assessed. Each evaluation will show the five dimension scores, a passage-specific rationale for each, the secondary total, and the evaluator’s synthesis notes.</p><p>The scores attached to the three constructed calibration essays are training illustrations, not evaluations, and are shown only on the <a href="rubric.html#calibration">Rubric</a> page.</p></div></section><hr><section aria-labelledby="instrument"><p class="kicker">5.2</p><h2 id="instrument">Scoring instrument</h2><aside class="notice notice--evaluator"><strong>Evaluator-only.</strong><p>Score each dimension independently, citing specific passages. Score unseen responses before consulting the calibration examples. Anchors are from the <a href="rubric.html#dimensions">rubric</a>.</p></aside><form class="scorer" id="score-form" autocomplete="off" novalidate>
+  <p class="lede">Dimension-level scores for each collected response, with documented evaluator rationales. The five-score profile is the primary result.</p><ul class="page-meta"><li><strong>Evaluations recorded:</strong> 0</li><li><strong>Protocol:</strong> <a href="rubric.html#protocol">Rubric document §7</a></li></ul><div class="material-row" aria-label="Kind of material on this page"><span class="material material--findings"><span class="material-name">Observations and findings</span><span class="material-note">From actual model runs</span></span><span class="material material--criteria"><span class="material-name">Scoring criteria</span><span class="material-note">Evaluator-only</span></span></div>
+</div></header><div class="section"><div class="container doc-layout"><nav class="toc" aria-label="On this page"><p class="toc-title">On this page</p><ol><li><a href="#scores">Recorded evaluations</a></li><li><a href="#instrument">Scoring instrument</a></li></ol></nav><div class="doc-main"><section aria-labelledby="scores"><p class="kicker">5.1</p><h2 id="scores">Recorded evaluations</h2><span class="material material--findings"><span class="material-name">Observations and findings</span><span class="material-note">From actual model runs</span></span><div class="placeholder"><span class="status">Placeholder · awaiting data</span><h3>No evaluations have been recorded yet</h3><p>Scores will appear here once model responses have been collected and independently assessed. Each evaluation will show the five dimension scores, a passage-specific rationale for each, the secondary total, and the evaluator’s synthesis notes.</p><p>The scores attached to the three constructed essays in Appendix A are illustrative calibration judgments, not evaluations, and are shown only on the <a href="rubric.html#calibration">Rubric</a> page.</p></div></section><hr><section aria-labelledby="instrument"><p class="kicker">5.2</p><h2 id="instrument">Scoring instrument</h2><span class="material material--criteria"><span class="material-name">Scoring criteria</span><span class="material-note">Evaluator-only</span></span><aside class="notice notice--evaluator"><strong>Evaluator-only.</strong><p>Score each dimension independently, citing specific passages. Evaluators should score unseen responses before consulting Appendix A, where feasible, to reduce anchoring. Anchors are from the <a href="rubric.html#dimensions">rubric</a>.</p></aside><form class="scorer" id="score-form" autocomplete="off" novalidate>
   <div class="scorer-meta">
-    <label class="field">Response ID<input name="response_id" placeholder="e.g. R-001"></label>
-    <label class="field">Evaluator<input name="evaluator" placeholder="Assessor identifier"></label>
-    <label class="field">Date<input name="date" type="date"></label>
-    <label class="check"><input type="checkbox" name="blind_to_model"> Scored blind to model identity</label>
+    <label class="field">Case/prompt identifier<input id="case_prompt_identifier" name="case_prompt_identifier" placeholder="Case record and prompt used"></label>
+    <label class="field">Response ID<input id="response_id" name="response_id" placeholder="e.g. R-001"></label>
+    <label class="field">Model and run identifier<input id="model_run" name="model_run" placeholder="Model, version and run"></label>
+    <label class="field">Evaluator<input id="evaluator" name="evaluator" placeholder="Assessor identifier"></label>
+    <label class="field">Date<input id="date" name="date" type="date"></label>
+    <label class="check"><input type="checkbox" id="blind_to_model" name="blind_to_model"> Scored blind to model identity</label>
   </div>
   <div class="score-row" data-dim="I">
   <div><h4>I. Critical analysis</h4><p class="fine-print" style="margin:4px 0 0">Did the essay determine what requires understanding, rather than simply adopt the most prominent statistic?</p></div>
-  <label class="field">Score (0–4)<select name="score_I" data-score="I"><option value="">—</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></label>
+  <label class="field">Score (0–4)<select id="score_I" name="score_I" data-score="I"><option value="">—</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></label>
   <p class="anchor-now" data-anchor aria-live="polite">No score selected.</p>
-  <label class="field field--rationale">Passage-specific evidence and rationale<span class="hint">Quote or locate the passage; for a 4, state the step beyond level 3.</span>
-    <textarea name="rationale_I" rows="3"></textarea></label>
+  <label class="field field--rationale">Supporting passage(s) and rationale<span class="hint">Cite specific passages with a one- or two-sentence reason. For every 4, identify the step beyond 3.</span>
+    <textarea id="rationale_I" name="rationale_I" rows="3"></textarea></label>
 </div><div class="score-row" data-dim="II">
   <div><h4>II. Conceptual reasoning</h4><p class="fine-print" style="margin:4px 0 0">Do distinctions clarify the phenomenon, rather than decorate the argument?</p></div>
-  <label class="field">Score (0–4)<select name="score_II" data-score="II"><option value="">—</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></label>
+  <label class="field">Score (0–4)<select id="score_II" name="score_II" data-score="II"><option value="">—</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></label>
   <p class="anchor-now" data-anchor aria-live="polite">No score selected.</p>
-  <label class="field field--rationale">Passage-specific evidence and rationale<span class="hint">Quote or locate the passage; for a 4, state the step beyond level 3.</span>
-    <textarea name="rationale_II" rows="3"></textarea></label>
+  <label class="field field--rationale">Supporting passage(s) and rationale<span class="hint">Cite specific passages with a one- or two-sentence reason. For every 4, identify the step beyond 3.</span>
+    <textarea id="rationale_II" name="rationale_II" rows="3"></textarea></label>
 </div><div class="score-row" data-dim="III">
   <div><h4>III. Consequential pattern recognition and interpretation</h4><p class="fine-print" style="margin:4px 0 0">Has the model discovered consequential links or exceptions, rather than merely collected facts?</p></div>
-  <label class="field">Score (0–4)<select name="score_III" data-score="III"><option value="">—</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></label>
+  <label class="field">Score (0–4)<select id="score_III" name="score_III" data-score="III"><option value="">—</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></label>
   <p class="anchor-now" data-anchor aria-live="polite">No score selected.</p>
-  <label class="field field--rationale">Passage-specific evidence and rationale<span class="hint">Quote or locate the passage; for a 4, state the step beyond level 3.</span>
-    <textarea name="rationale_III" rows="3"></textarea></label>
+  <label class="field field--rationale">Supporting passage(s) and rationale<span class="hint">Cite specific passages with a one- or two-sentence reason. For every 4, identify the step beyond 3.</span>
+    <textarea id="rationale_III" name="rationale_III" rows="3"></textarea></label>
 </div><div class="score-row" data-dim="IV">
   <div><h4>IV. Evidentiary discipline</h4><p class="fine-print" style="margin:4px 0 0">Does it know what the evidence can and cannot show, and what would change its mind?</p></div>
-  <label class="field">Score (0–4)<select name="score_IV" data-score="IV"><option value="">—</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></label>
+  <label class="field">Score (0–4)<select id="score_IV" name="score_IV" data-score="IV"><option value="">—</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></label>
   <p class="anchor-now" data-anchor aria-live="polite">No score selected.</p>
-  <label class="field field--rationale">Passage-specific evidence and rationale<span class="hint">Quote or locate the passage; for a 4, state the step beyond level 3.</span>
-    <textarea name="rationale_IV" rows="3"></textarea></label>
+  <label class="field field--rationale">Supporting passage(s) and rationale<span class="hint">Cite specific passages with a one- or two-sentence reason. For every 4, identify the step beyond 3.</span>
+    <textarea id="rationale_IV" name="rationale_IV" rows="3"></textarea></label>
 </div><div class="score-row" data-dim="V">
   <div><h4>V. Substantive judgment</h4><p class="fine-print" style="margin:4px 0 0">Did it decide what matters most, on sound grounds, rather than conclude that everything matters?</p></div>
-  <label class="field">Score (0–4)<select name="score_V" data-score="V"><option value="">—</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></label>
+  <label class="field">Score (0–4)<select id="score_V" name="score_V" data-score="V"><option value="">—</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></label>
   <p class="anchor-now" data-anchor aria-live="polite">No score selected.</p>
-  <label class="field field--rationale">Passage-specific evidence and rationale<span class="hint">Quote or locate the passage; for a 4, state the step beyond level 3.</span>
-    <textarea name="rationale_V" rows="3"></textarea></label>
+  <label class="field field--rationale">Supporting passage(s) and rationale<span class="hint">Cite specific passages with a one- or two-sentence reason. For every 4, identify the step beyond 3.</span>
+    <textarea id="rationale_V" name="rationale_V" rows="3"></textarea></label>
 </div>
-  <div class="score-total" aria-live="polite"><div><div class="fine-print">Secondary total</div><span class="total" id="score-total">0</span> <span class="fine-print">/ 20</span></div><span class="state" id="score-state">0 of 5 dimensions scored</span></div>
-  <div class="synthesis"><label class="field">Governing thesis observed<textarea name="governing_thesis" rows="3"></textarea></label><label class="field">Most consequential insight or omission<textarea name="consequential_insight" rows="3"></textarea></label><label class="field">Disconfirming evidence considered or overlooked<textarea name="disconfirming_evidence" rows="3"></textarea></label><label class="field">Unexpected interpretation and disposition<textarea name="unexpected_interpretation" rows="3"></textarea></label><label class="field">Assessor confidence / unresolved calibration issue<textarea name="assessor_uncertainty" rows="3"></textarea></label></div>
+  <div class="score-total" aria-live="polite"><div><div class="fine-print">Total (secondary)</div><span class="total" id="score-total">0</span> <span class="fine-print">/ 20</span></div><span class="state" id="score-state">0 of 5 dimensions scored</span></div>
+  <div class="synthesis"><label class="field">Governing thesis observed<textarea id="governing_thesis" name="governing_thesis" rows="3"></textarea></label><label class="field">Most consequential insight or omission<textarea id="consequential_insight" name="consequential_insight" rows="3"></textarea></label><label class="field">Disconfirming evidence the model considered or overlooked<textarea id="disconfirming_evidence" name="disconfirming_evidence" rows="3"></textarea></label><label class="field">Explanation for each score of 4<textarea id="explanation_for_4s" name="explanation_for_4s" rows="3"></textarea></label><label class="field">Unexpected interpretation (if any) and disposition<textarea id="unexpected_interpretation" name="unexpected_interpretation" rows="3"></textarea></label><label class="field">Assessor confidence / unresolved calibration issue<textarea id="assessor_uncertainty" name="assessor_uncertainty" rows="3"></textarea></label></div>
   <div class="btn-row scorer-actions">
     <button class="btn" type="button" id="export-json">Export JSON</button>
     <button class="btn btn--ghost" type="button" id="export-csv">Export CSV</button>
@@ -72,17 +73,17 @@
     <button class="btn btn--ghost" type="button" id="reset-form">Clear form</button>
   </div>
   <p class="status-message" data-status role="status" aria-live="polite"></p>
-  <p class="fine-print">Scoring runs entirely in your browser; nothing is transmitted or saved automatically. The JSON export matches the record format in <code>data/evaluations.json</code>.</p>
+  <p class="fine-print">Fields follow the scoring record in the rubric document (§8). Scoring runs entirely in your browser; nothing is transmitted or saved automatically. The JSON export matches the record format in <code>data/evaluations.json</code>.</p>
 </form></section></div></div></div>
 </main>
 <footer class="site-footer">
   <div class="container">
     <div class="footer-grid">
       <div><span class="brand-name">Beyond Explanation</span>
-        <p>A conceptual-reasoning study built on the Nordland welfare-state case. Research by Elaine Chou.</p>
-        <p>Nordland is a fictional country. Constructed calibration examples are not model outputs or experimental results.</p></div>
+        <p>A conceptual-reasoning study built on the Nordland welfare-state paradox. Research by Elaine Chou.</p>
+        <p>Nordland is a fictional country. Illustrative examples are constructed calibration material, not model outputs or experimental results.</p></div>
       <div><h2>Sections</h2><ul><li><a href="case-record.html">Case Record</a></li><li><a href="methodology.html">Methodology</a></li><li><a href="rubric.html">Evaluation Rubric</a></li><li><a href="responses.html">Model Responses</a></li><li><a href="evaluations.html">Evaluations</a></li><li><a href="findings.html">Findings</a></li></ul></div>
-      <div><h2>Source files</h2><ul><li><a href="data/Nordland_Case_Record.md">Case record (Markdown)</a></li><li><a href="data/Nordland_Methodology.md">Methodology (Markdown)</a></li><li><a href="data/Nordland_Evaluator_Interpretations_and_Assessment_Criteria.md">Evaluator criteria (Markdown)</a></li><li><a href="data/responses.json">Model responses (JSON)</a></li><li><a href="data/evaluations.json">Evaluations (JSON)</a></li></ul></div>
+      <div><h2>Source documents (PDF)</h2><ul><li><a href="documents/Nordland_Case_Record.pdf" type="application/pdf">Nordland Case Record</a></li><li><a href="documents/Beyond_Explanation_Methodology.pdf" type="application/pdf">Beyond Explanation (methodology)</a></li><li><a href="documents/Nordland_Evaluator_Interpretations_and_Assessment_Criteria.pdf" type="application/pdf">Evaluator Interpretations and Assessment Criteria</a></li><li><a href="documents/Nordland_Validity_Questions_and_Next_Research_Steps.pdf" type="application/pdf">Validity Questions and Next Research Steps</a></li></ul></div>
     </div>
     <div class="footer-base">Static site · no tracking · scoring tools run entirely in the browser.</div>
   </div>

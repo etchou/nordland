@@ -150,10 +150,11 @@ tr.total td, tr.total th { border-top: 1px solid var(--line); font-weight: 600; 
 
 /* ---------- Notices & placeholders ---------- */
 .notice { border-left: 3px solid var(--blue); background: var(--blue-soft); padding: 16px 20px; margin: 0 0 2em; font: 400 0.92rem/1.6 var(--sans); color: var(--ink); max-width: 820px; }
-.notice strong { display: block; margin-bottom: 4px; color: var(--navy); }
+.notice > strong { display: block; margin-bottom: 4px; color: var(--navy); }
+.notice p strong { color: var(--charcoal); }
 .notice p:last-child { margin-bottom: 0; }
 .notice--evaluator { border-left-color: var(--caution); background: var(--caution-soft); }
-.notice--evaluator strong { color: var(--caution); }
+.notice--evaluator > strong { color: var(--caution); }
 
 .placeholder { border: 1px dashed var(--line); background: var(--white); padding: clamp(22px, 3vw, 32px); max-width: 820px; margin: 0 0 2em; }
 .placeholder .status { display: inline-block; font: 600 0.7rem/1 var(--sans); letter-spacing: 0.12em; text-transform: uppercase; color: var(--caution); border: 1px solid currentColor; padding: 5px 8px; margin-bottom: 14px; }
@@ -414,3 +415,77 @@ details.disclosure > .disclosure-body { padding: 0 0 28px; }
   .table-wrap { overflow: visible; }
   .case-frame { display: none; }
 }
+
+/* ---------- Source-document integration ---------- */
+/* Material labels: the five kinds of material the study keeps separate */
+.material-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+.material { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; border: 1px solid var(--line); border-left-width: 3px; background: var(--white); padding: 5px 10px; font: 400 0.76rem/1.35 var(--sans); color: var(--ink-soft); margin: 0 0 1.2em; max-width: 100%; }
+.material-row .material { margin: 0; }
+.material-name { font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 0.7rem; color: var(--ink); }
+.material--evidence { border-left-color: var(--blue); }
+.material--evidence .material-name { color: var(--blue); }
+.material--interpretation { border-left-color: var(--navy); }
+.material--criteria { border-left-color: var(--caution); }
+.material--criteria .material-name { color: var(--caution); }
+.material--illustrative { border-left-color: #7a6a9c; border-style: dashed solid dashed solid; }
+.material--illustrative .material-name { color: #5d4f80; }
+.material--findings { border-left-color: #3f6f55; }
+.material--findings .material-name { color: #2f5a43; }
+th .material { margin: 0; }
+
+.source-line { font: 400 0.86rem/1.5 var(--sans); color: var(--ink-soft); margin: 18px 0 0; max-width: 80ch; }
+.source-line strong { color: var(--ink); font-weight: 600; }
+.doc-cite { font-style: italic; color: var(--navy); }
+
+.site-note { border: 1px dashed var(--blue-line); background: var(--white); padding: 12px 16px; margin: 1.4em 0; font: 400 0.86rem/1.55 var(--sans); color: var(--ink-soft); max-width: var(--measure); }
+.site-note-label { display: block; font: 600 0.66rem/1.4 var(--sans); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 4px; }
+.site-note p { margin: 0; }
+
+.notice .prose p, .notice p { max-width: none; }
+.notice > p, .notice > div > p { margin-bottom: 0.6em; }
+.notice > p:last-child { margin-bottom: 0; }
+
+.doc-tabs { margin: 0 0 32px; font-family: var(--sans); border-bottom: 1px solid var(--line); overflow-x: auto; }
+.doc-tabs ol { display: flex; gap: 4px; list-style: none; margin: 0; padding: 0; }
+.doc-tabs a { display: block; padding: 10px 14px; font-size: 0.86rem; font-weight: 500; color: var(--ink-soft); text-decoration: none; border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; }
+.doc-tabs a:hover { color: var(--navy); }
+.doc-tabs a[aria-current="page"] { color: var(--navy); border-bottom-color: var(--navy); }
+
+.doc-main > h2, .doc-main > h3, .doc-main > h4 { max-width: var(--measure); }
+.doc-main > h2 { margin-top: 2.4em; padding-top: 1.6em; border-top: 1px solid var(--line-soft); }
+.doc-main > .doc-tabs + h2 { margin-top: 0; padding-top: 0; border-top: 0; }
+.doc-main > h3 { margin-top: 1.8em; }
+.doc-main > h4 { margin-top: 1.6em; font-size: 1.02rem; }
+.doc-main > p, .doc-main > ul, .doc-main > ol, .doc-main > blockquote { max-width: var(--measure); }
+.doc-main > ul, .doc-main > ol { padding-left: 1.4em; }
+.doc-main > ul li { margin-bottom: 0.5em; }
+.doc-main blockquote { margin: 1.6em 0; padding: 16px 20px; background: var(--white); border-left: 3px solid var(--navy); }
+.doc-main blockquote p:last-child { margin-bottom: 0; }
+
+.source-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); font-family: var(--sans); }
+.source-list li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 24px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.source-list .src-title { font: 600 1rem/1.4 var(--serif); }
+.source-list .src-title a { text-decoration: none; }
+.source-list .src-title a:hover { text-decoration: underline; }
+.source-list .src-meta { font-size: 0.82rem; color: var(--ink-soft); }
+
+.materials-table th[scope="row"] { min-width: 12rem; }
+.materials-table td { min-width: 10rem; font-size: 0.86rem; }
+
+.quoted-rules { border-left: 2px solid var(--line); padding-left: 18px; margin: 0 0 1.6em; max-width: var(--measure); }
+.quoted-rules ul { padding-left: 1.1em; margin: 0; font-size: 0.96rem; }
+
+.notes-list { display: grid; grid-template-columns: minmax(0, 16rem) minmax(0, 1fr); gap: 0; margin: 20px 0 0; font: 400 0.9rem/1.55 var(--sans); }
+.notes-list dt, .notes-list dd { padding: 10px 0; border-top: 1px solid var(--line-soft); margin: 0; }
+.notes-list dt { font-weight: 600; padding-right: 16px; }
+
+.anchor-list { margin-left: 0; }
+.anchor-list .dash { color: var(--ink-faint); font-weight: 400; }
+.dimension-head h3 .roman { font: 600 0.9rem var(--sans); color: var(--blue); margin-right: 4px; }
+.anchor-matrix th.lvl { text-align: left; }
+
+@media (max-width: 720px) {
+  .notes-list { grid-template-columns: minmax(0, 1fr); }
+  .notes-list dd { border-top: 0; padding-top: 0; }
+}
+.doc-main a, .prose a, .notice a, .site-note a { overflow-wrap: anywhere; }

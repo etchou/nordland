@@ -7,7 +7,7 @@ Run: python verify_case.py
 from pathlib import Path
 import re
 
-source = (Path(__file__).resolve().parent / 'data' / 'Nordland_Case_Record.md').read_text()
+source = (Path(__file__).resolve().parent / 'content' / 'Nordland_Case_Record.md').read_text()
 rows = []
 for line in source.splitlines():
     if not re.match(r'^Office \d+\s*\|', line):

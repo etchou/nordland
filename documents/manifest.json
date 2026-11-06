@@ -1,0 +1,45 @@
+{
+  "_about": "Authoritative research documents. The site links only to `pdf` (stable name). `current_archive_file` is the designated current versioned original; build.py checks both are byte-identical to `sha256`. To adopt a new version: add the versioned file to documents/archive/, copy it over the stable name, and update this entry.",
+  "documents": [
+    {
+      "key": "case-record",
+      "title": "Nordland Case Record",
+      "pdf": "documents/Nordland_Case_Record.pdf",
+      "current_archive_file": "documents/archive/Nordland_Case_Record_v1_4.pdf",
+      "sha256": "01ae74fb78e1662d25b44d23fe1cdc0a504b2d7dc5ebc757c1bf86d4b6ada844",
+      "pages": 2,
+      "web_source": "content/Nordland_Case_Record.md",
+      "audience": "model-facing"
+    },
+    {
+      "key": "methodology",
+      "title": "Beyond Explanation: Evaluating Conceptual Reasoning in AI Through the Nordland Welfare-State Paradox",
+      "pdf": "documents/Beyond_Explanation_Methodology.pdf",
+      "current_archive_file": "documents/archive/Nordland_Beyond_Explanation_Methodology_v1_8.pdf",
+      "sha256": "73c956334c45f1977ee1fbf610a15c92f94dce88b9bac0055b13f1a4473f3025",
+      "pages": 10,
+      "web_source": "content/Beyond_Explanation_Methodology.md",
+      "audience": "methodology"
+    },
+    {
+      "key": "evaluator-criteria",
+      "title": "Nordland: Evaluator Interpretations and Assessment Criteria",
+      "pdf": "documents/Nordland_Evaluator_Interpretations_and_Assessment_Criteria.pdf",
+      "current_archive_file": "documents/archive/Nordland_Evaluator_Interpretations_and_Assessment_Criteria_v1_2.pdf",
+      "sha256": "1165972ebdd309c3e2f5378e6850f09fa37cdf11628a8be7e9657a3af7efe3bb",
+      "pages": 12,
+      "web_source": "content/Nordland_Evaluator_Interpretations_and_Assessment_Criteria.md",
+      "audience": "evaluator-only"
+    },
+    {
+      "key": "validity",
+      "title": "Nordland: Validity Questions and Next Research Steps",
+      "pdf": "documents/Nordland_Validity_Questions_and_Next_Research_Steps.pdf",
+      "current_archive_file": "documents/archive/Nordland_Validity_Questions_and_Next_Research_Steps_v1_1.pdf",
+      "sha256": "1ed4a2ab30c2e10113bde8df2a93d597a594f73eb108b96cc635bf3440716f59",
+      "pages": 6,
+      "web_source": "content/Nordland_Validity_Questions_and_Next_Research_Steps.md",
+      "audience": "methodology"
+    }
+  ]
+}

@@ -100,7 +100,9 @@
     });
     const values = Object.values(scores).map(s => s.score);
     return {
+      case_prompt_identifier: val('case_prompt_identifier'),
       response_id: val('response_id'),
+      model_run: val('model_run'),
       evaluator: val('evaluator'),
       date: val('date'),
       blind_to_model: form.elements.blind_to_model.checked,
@@ -109,6 +111,7 @@
       governing_thesis: val('governing_thesis'),
       consequential_insight: val('consequential_insight'),
       disconfirming_evidence: val('disconfirming_evidence'),
+      explanation_for_4s: val('explanation_for_4s'),
       unexpected_interpretation: val('unexpected_interpretation'),
       assessor_uncertainty: val('assessor_uncertainty')
     };
