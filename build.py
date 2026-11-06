@@ -523,10 +523,13 @@ def build_home() -> None:
         for slug, num, title, desc, tag in SECTIONS
     )
     abstract = find_section(method, "Abstract")
-    lede = " ".join(quote_from(abstract, s) for s in [
-        "In the fictional record, universal benefits substantially reduce poverty, yet claims filed by minority-background applicants are denied at roughly twice the rate of other claims.",
-        "Minority-background residents report weaker social belonging even as support for the welfare system remains high.",
-    ])
+    # Homepage introduction: wording supplied by the author (not a quotation from a source document).
+    lede = ("Nordland presents a layered conceptual paradox: a strong welfare state substantially reduces poverty through universal benefits, "
+            "yet significant inequalities persist. Minority-background applicants face roughly twice the denial rate of other applicants, "
+            "while minority-background residents report weaker social belonging despite widespread support for the welfare system. "
+            "These seemingly contradictory outcomes invite investigation into the complex relationships among social protections, "
+            "administrative practices, structural inequalities, and lived experiences—raising deeper questions about how universal "
+            "systems can achieve broad success while producing or sustaining uneven outcomes.")
     sec1 = find_section(method, "1 Research problem")
     primary_note = " ".join(quote_from(sec1, s) for s in [
         "A satisfactory inquiry must treat the state’s measurable redistributive achievement as seriously as its patterned unequal outcomes.",
